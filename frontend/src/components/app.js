@@ -17,8 +17,6 @@ export default class App extends React.Component {
     this.timer = null
     this.onSelectStyle = this.onSelectStyle.bind(this)
     this.onUploadImage = this.onUploadImage.bind(this)
-    // test
-    axios.get('/api/style-transfer').then(data => console.log(data))
   }
 
   async styleTransfer() {

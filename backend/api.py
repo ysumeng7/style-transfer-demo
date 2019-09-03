@@ -24,8 +24,6 @@ url = 'http://model:8501/v1/models/style-transfer:predict'
 
 
 class StyleTransfer(Resource):
-    def get(self):
-        return {'test': 'ok'}, 200
 
     def post(self):
         try:
