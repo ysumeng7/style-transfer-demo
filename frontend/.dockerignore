@@ -1,0 +1,14 @@
+# Docker
+.docker
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+# Git
+.git
+.gitignore
+README.md
+
+# nodeJS
+build
+node_modules

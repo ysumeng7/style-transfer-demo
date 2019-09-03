@@ -1,0 +1,38 @@
+.image-icon {
+  display: block;
+  padding: 0.25vw;
+  max-width: 18.25vw;
+  max-height: 18.25vw;
+  align-content: center;
+  vertical-align: middle;
+}
+
+/* resize and center-crop the image */
+.image-icon img {
+  object-fit: cover;
+  width: 16vw;
+  height: 16vw;
+  border-radius: 100%;
+  filter: brightness(100%);
+  transition: width 0.2s, height 0.2s, filter 0.2s;
+}
+
+.image-icon img:hover {
+  cursor: pointer;
+  width: 18vw;
+  height: 18vw;
+  filter: brightness(50%);
+}
+
+.image-icon img:active { filter: brightness(25%); }
+
+@media only screen and (max-width: 600px) {
+  .image-icon img:hover {
+    cursor: pointer;
+    width: 18vw;
+    height: 18vw;
+    filter: brightness(100%);
+  }
+
+  .image-icon img:active { filter: brightness(150%); }
+}
