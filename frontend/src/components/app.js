@@ -4,6 +4,7 @@ import ImagePane from './image-pane'
 import StylePanel from './style-panel'
 import resizeImage from '../utils'
 import drop from '../assets/drop.png'
+import loading from '../assets/loading.gif'
 
 
 export default class App extends React.Component {
@@ -38,7 +39,7 @@ export default class App extends React.Component {
         return resp.data['style-image']
       } catch (error) {
         console.log(error)
-        return x
+        return this.state.cache[0]
       }
     } else {
       return this.state.cache[0]
@@ -48,6 +49,7 @@ export default class App extends React.Component {
   onSelectStyle(index) {
     clearTimeout(this.timer)
     this.setState({style: index})
+    this.setState({image: loading})
     this.timer = setTimeout(() => {
       this.styleTransfer().then(image => {
         this.setState({image: image})
