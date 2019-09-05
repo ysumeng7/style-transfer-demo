@@ -36,3 +36,12 @@
 
   .image-icon img:active { filter: brightness(150%); }
 }
+
+#disabled {
+  filter: brightness(25%);
+}
+
+#disabled:hover {
+  cursor: not-allowed;
+  filter: brightness(25%);
+}

@@ -8,13 +8,12 @@ export default async function preprocessing(blob) {
 
   let w = image.width, h = image.height
 
-  if (w * h > 4194303) {
-    alert('Image file too large')
-    return null
-  } else if (w * h > 1048575) {
-    // half the image
-    w = (w / 2) >> 0
-    h = (h / 2) >> 0
+  if (w * h > 512 * 512) {
+    // resize according to shortest side
+    let p = Math.max(w, h)
+    let r = 512 / p
+    w = (w * r) >> 0
+    h = (h * r) >> 0
   }
 
   canvas.width  = w

@@ -13,65 +13,73 @@ export default class App extends React.Component {
     this.state = {
       cache: {},
       image: null,
-      style: null,
     }
     this.timer = null
     this.onSelectStyle = this.onSelectStyle.bind(this)
     this.onUploadImage = this.onUploadImage.bind(this)
   }
 
-  async styleTransfer() {
-    const x = await resizeImage(this.state.cache[0])
-    const z = this.state.style
+  async sendImage(image) {
+    try {
+      const url  = '/api/style-transfer'
+      const data = {image: await resizeImage(image)}
+      const resp = await axios.put(url, data)
+      return resp.data
+    } catch (error) {
+      console.log(error)
+      return 'error in sending image'
+    }
+  }
 
-    if (!z) {
-      return this.state.cache[0]
-    } else if (z && this.state.cache[z]) {
-      return this.state.cache[z]
-    } else if (x && z) {
-      try {
-        const url  = '/api/style-transfer'
-        const data = {
-          image: x,
-          style: z
-        }
-        const resp = await axios.post(url, data)
-        return resp.data['style-image']
-      } catch (error) {
-        console.log(error)
-        return this.state.cache[0]
-      }
-    } else {
+  async getStyleImage(z) {
+    try {
+      const url  = '/api/style-transfer'
+      const data = { style: z }
+      const resp = await axios.post(url, data)
+      return resp.data['style-image']
+    } catch (error) {
+      console.log(error)
       return this.state.cache[0]
     }
   }
 
-  onSelectStyle(index) {
+  setImage(index) {
     clearTimeout(this.timer)
-    this.setState({style: index})
+    const image = this.state.cache[index]
+    if (image)
+      this.setState({image: image}) 
+    else
+      this.timer = setTimeout(() => this.setImage(index), 500)
+  }
+
+  onSelectStyle(index) {
     this.setState({image: loading})
-    this.timer = setTimeout(() => {
-      this.styleTransfer().then(image => {
-        this.setState({image: image})
-        if (index > 0) {
-          const cache = Object.assign({}, this.state.cache)
-          cache[index] = image
-          this.setState({cache: cache})
-        }
-      })
-    }, 500)
+    this.setImage(index)
   }
 
   onUploadImage(image) {
     this.setState({image: image})
     this.setState({cache: {0: image}})
+    this.sendImage(image).then(
+      mssg => {
+        console.log(mssg)
+        for (let z = 0; z < 10; z++) {
+          this.getStyleImage(z).then(image => {
+            const cache = Object.assign({}, this.state.cache)
+            cache[z + 1] = image
+            this.setState({cache: cache})
+            console.log(`Style-${z} [done]`)
+          })
+        }
+      }
+    )
   }
 
   render() {
     return (
       <div>
         <ImagePane onDrop={this.onUploadImage} image={this.state.image || drop} />
-        <StylePanel onClick={this.onSelectStyle} />
+        <StylePanel onClick={this.onSelectStyle} ready={[...Array(11).keys()].map(i => this.state.cache[i])}/>
       </div>
     )
   }

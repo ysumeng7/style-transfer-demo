@@ -16,6 +16,7 @@ export default class StylePanel extends React.Component {
       index={id}
       image={img}
       onClick={this.props.onClick}
+      ready={this.props.ready[id]}
     />)
   }
 
